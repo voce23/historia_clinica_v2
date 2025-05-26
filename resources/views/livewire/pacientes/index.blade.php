@@ -47,6 +47,7 @@
                 <th class="border px-4 py-2">Nombre</th>
                 <th class="border px-4 py-2">Documento</th>
                 <th class="border px-4 py-2">F. Nac.</th>
+                <th class="border px-4 py-2">Edad</th>
                 <th class="border px-4 py-2">Comunidad</th>
                 <th class="border px-4 py-2">Acciones</th>
             </tr>
@@ -59,6 +60,7 @@
                     <td class="border px-4 py-2">{{ $p->nombre }} {{ $p->apellido }}</td>
                     <td class="border px-4 py-2">{{ $p->documento }}</td>
                     <td class="border px-4 py-2">{{ $p->fecha_nacimiento }}</td>
+                    <td class="border px-4 py-2">{{ $p->edad }}</td>
                     <td class="border px-4 py-2">{{ $p->comunidad }}</td>
                     <td class="border px-4 py-2 space-x-2">
                         <button wire:click="edit({{ $p->id }})" class="text-blue-600">Editar</button>
