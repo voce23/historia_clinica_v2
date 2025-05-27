@@ -8,6 +8,8 @@ use App\Livewire\Medicamentos\Index as MedicamentosIndex;
 use App\Livewire\Consultas\Index as ConsultasIndex;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ConsultaExportController;
+use App\Livewire\Establecimientos\Index as EstablecimientosIndex;
+
 
 
 Route::view('/', 'welcome');
@@ -43,6 +45,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/usuarios', Index::class)->name('usuarios.index');
 });
 
+Route::get('/establecimientos', EstablecimientosIndex::class)
+    ->middleware(['auth', 'admin'])
+    ->name('establecimientos');
+
 
 // para descargar word
 
@@ -51,6 +57,7 @@ Route::get('/export-pacientes-docx', [ExportController::class, 'exportPacientesD
 
 Route::get('/consultas/{id}/exportar-word', [ConsultaExportController::class, 'exportarWord'])->name('consultas.exportarWord');
 
+Route::middleware(['auth'])->get('/usuarios', \App\Livewire\Usuarios\Index::class)->name('usuarios.index');
 
 
 

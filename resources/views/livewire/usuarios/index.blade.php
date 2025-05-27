@@ -48,6 +48,20 @@
             @enderror
         </div>
 
+        <div>
+            <label>Establecimiento</label>
+            <select wire:model="establecimiento_id" class="w-full border rounded p-2">
+                <option value="">Seleccione</option>
+                @foreach ($establecimientos as $e)
+                    <option value="{{ $e->id }}">{{ $e->nombre }}</option>
+                @endforeach
+            </select>
+            @error('establecimiento_id')
+                <span class="text-red-500 text-sm">{{ $message }}</span>
+            @enderror
+        </div>
+
+
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">
             {{ $modoEditar ? 'Actualizar' : 'Registrar' }}
         </button>
@@ -77,7 +91,10 @@
                 <th class="px-2 py-1">Nombre</th>
                 <th class="px-2 py-1">Email</th>
                 <th class="px-2 py-1">Role</th>
-                <th class="px-2 py-1">Acciones</th>
+                <th class="px-2 py-1 border">Establecimiento</th> <!-- AGREGADO -->
+                @if (auth()->user()->role === 'admin')
+                    <th class="px-2 py-1 border">Acciones</th>
+                @endif
             </tr>
         </thead>
         <tbody>
@@ -87,18 +104,25 @@
                     <td class="px-2 py-1">{{ $user->name }}</td>
                     <td class="px-2 py-1">{{ $user->email }}</td>
                     <td class="px-2 py-1 capitalize">{{ $user->role }}</td>
+                    <td class="px-2 py-1 border">
+                        {{ $user->establecimiento?->nombre ?? 'Sin asignar' }}
+                    </td>
                     <td class="px-2 py-1">
-                        <button wire:click="editar({{ $user->id }})"
-                            class="text-blue-600 hover:underline">Editar</button>
-                        @if ($confirmandoEliminacionId === $user->id)
-                            <button wire:click="eliminarUsuario" class="text-red-600 font-bold">¿Confirmar?</button>
-                            <button wire:click="$set('confirmandoEliminacionId', null)"
-                                class="text-gray-500">Cancelar</button>
-                        @else
-                            <button wire:click="confirmarEliminacion({{ $user->id }})"
-                                class="text-red-600 hover:underline">Eliminar</button>
+                        @if (auth()->user()->role === 'admin')
+                            <button wire:click="editar({{ $user->id }})"
+                                class="text-blue-600 hover:underline">Editar</button>
+
+                            @if ($confirmandoEliminacionId === $user->id)
+                                <button wire:click="eliminarUsuario" class="text-red-600 font-bold">¿Confirmar?</button>
+                                <button wire:click="$set('confirmandoEliminacionId', null)"
+                                    class="text-gray-500">Cancelar</button>
+                            @else
+                                <button wire:click="confirmarEliminacion({{ $user->id }})"
+                                    class="text-red-600 hover:underline">Eliminar</button>
+                            @endif
                         @endif
                     </td>
+
                 </tr>
             @endforeach
         </tbody>

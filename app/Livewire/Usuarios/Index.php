@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use Livewire\Component;
+use App\Models\Establecimiento;
 
 class Index extends Component
 {
@@ -14,6 +15,8 @@ class Index extends Component
     public $modoEditar = false;
     public $confirmandoEliminacionId = null;
     public $usuarioIdEditando = null;
+    public $establecimiento_id;
+
 
 
 
@@ -28,6 +31,8 @@ class Index extends Component
             'email' => 'required|email|unique:users,email',
             'password' => ['required', Password::defaults()],
             'role' => 'required|in:admin,medico,enfermera',
+            'establecimiento_id' => 'nullable|exists:establecimientos,id',
+            
         ];
     }
 
@@ -43,6 +48,7 @@ class Index extends Component
             'email' => $this->email,
             'password' => Hash::make($this->password),
             'role' => $this->role,
+            'establecimiento_id' => $this->establecimiento_id,
         ]);
 
         session()->flash('message', 'Usuario creado exitosamente.');
@@ -54,11 +60,21 @@ class Index extends Component
      * Render the component view with all users.
      */
     public function render()
-    {
-        return view('livewire.usuarios.index', [
-            'usuarios' => \App\Models\User::latest()->get(),
-        ]);
-    }
+{
+    $establecimientos = Establecimiento::orderBy('nombre')->get();
+
+    // Solo los usuarios del mismo establecimiento si no es admin
+    $usuarios = auth()->user()->role === 'admin'
+        ? User::with('establecimiento')->get()
+        : User::with('establecimiento')
+            ->where('establecimiento_id', auth()->user()->establecimiento_id)
+            ->get();
+
+    return view('livewire.usuarios.index', [
+        'usuarios' => $usuarios,
+        'establecimientos' => $establecimientos,
+    ]);
+}
 
 
 
@@ -91,7 +107,9 @@ class Index extends Component
 
         if (!empty($this->password)) {
             $usuario->password = Hash::make($this->password);
+            $usuario->establecimiento_id = $this->establecimiento_id;
         }
+        
 
         $usuario->save();
 
