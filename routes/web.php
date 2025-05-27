@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Livewire\Usuarios\Index;
 use App\Livewire\Pacientes\Index as PacientesIndex;
 use App\Livewire\Diagnosticos\Index as DiagnosticosIndex;
 use App\Livewire\Medicamentos\Index as MedicamentosIndex;
@@ -38,8 +39,9 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-
-
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/usuarios', Index::class)->name('usuarios.index');
+});
 
 
 // para descargar word
