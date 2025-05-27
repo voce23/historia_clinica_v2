@@ -42,6 +42,8 @@
                 <option value="medico">Médico</option>
                 <option value="enfermera">Enfermera</option>
                 <option value="admin">Administrador</option>
+                <option value="estadistico">Estadístico</option>
+
             </select>
             @error('role')
                 <span class="text-red-500 text-sm">{{ $message }}</span>

@@ -30,7 +30,7 @@ class Index extends Component
             'nombre' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => ['required', Password::defaults()],
-            'role' => 'required|in:admin,medico,enfermera',
+            'role' => 'required|in:admin,medico,enfermera,estadistico',
             'establecimiento_id' => 'nullable|exists:establecimientos,id',
             
         ];
@@ -96,7 +96,7 @@ class Index extends Component
         $this->validate([
             'nombre' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $this->usuario_id,
-            'role' => 'required|in:admin,medico,enfermera',
+            'role' => 'required|in:admin,medico,enfermera,estadistico',
             'password' => 'nullable|min:6',
         ]);
 
